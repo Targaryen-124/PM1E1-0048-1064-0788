@@ -35,8 +35,8 @@ public class ActivityP2Lista extends AppCompatActivity {
     SQLiteConexion conexion;
     Button regresar, verimagen, actualizar, eliminar, compartir, llamar;
     ListView contactos;
-    ArrayList<Contactos> listaContactos;
-    ArrayList<String> arregloContactos;
+    ArrayList<Contactos> lstContactos;
+    ArrayList<String> arrayContactos;
     ArrayAdapter adp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +61,7 @@ public class ActivityP2Lista extends AppCompatActivity {
 
         ObtenerListaContactos();
 
-        adp = new ArrayAdapter(this, android.R.layout.simple_list_item_1, arregloContactos);
+        adp = new ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayContactos);
         contactos.setAdapter(adp);
 
         contactos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -85,8 +85,8 @@ public class ActivityP2Lista extends AppCompatActivity {
             public void onClick(View view) {
                 int seleccionado = contactos.getCheckedItemPosition();
                 if (seleccionado != ListView.INVALID_POSITION){
-                    String nombre = listaContactos.get(seleccionado).getNombre();
-                    String foto = listaContactos.get(seleccionado).getImagen();
+                    String nombre = lstContactos.get(seleccionado).getNombre();
+                    String foto = lstContactos.get(seleccionado).getImagen();
                     Intent intent = new Intent(ActivityP2Lista.this, ActivityP2Foto.class);
                     intent.putExtra("foto", foto);
                    intent.putExtra("nombre", nombre);
@@ -100,7 +100,7 @@ public class ActivityP2Lista extends AppCompatActivity {
             public void onClick(View view) {
                 int seleccionado = contactos.getCheckedItemPosition();
                 if (seleccionado != ListView.INVALID_POSITION){
-                    int id = listaContactos.get(seleccionado).getId();
+                    int id = lstContactos.get(seleccionado).getId();
                     Actualizar(id);
                 }
             }
@@ -111,10 +111,10 @@ public class ActivityP2Lista extends AppCompatActivity {
             public void onClick(View view) {
                 int seleccionado = contactos.getCheckedItemPosition();
                 if (seleccionado != ListView.INVALID_POSITION){
-                    int id = listaContactos.get(seleccionado).getId();
+                    int id = lstContactos.get(seleccionado).getId();
                     Eliminar(id);
                     ObtenerListaContactos();
-                    adp = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, arregloContactos);
+                    adp = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, arrayContactos);
                     contactos.setAdapter(adp);
                 }
             }
@@ -125,10 +125,10 @@ public class ActivityP2Lista extends AppCompatActivity {
             public void onClick(View view) {
                 int seleccionado = contactos.getCheckedItemPosition();
                 if (seleccionado != ListView.INVALID_POSITION){
-                    int id = listaContactos.get(seleccionado).getId();
-                    String nombre = listaContactos.get(seleccionado).getNombre();
-                    String numero = listaContactos.get(seleccionado).getNumero();
-                    String nota = listaContactos.get(seleccionado).getNota();
+                    int id = lstContactos.get(seleccionado).getId();
+                    String nombre = lstContactos.get(seleccionado).getNombre();
+                    String numero = lstContactos.get(seleccionado).getNumero();
+                    String nota = lstContactos.get(seleccionado).getNota();
                     Compartir(id, nombre, numero, nota);
                 }
             }
@@ -139,8 +139,8 @@ public class ActivityP2Lista extends AppCompatActivity {
             public void onClick(View view) {
                 int seleccionado = contactos.getCheckedItemPosition();
                 if (seleccionado != ListView.INVALID_POSITION){
-                    String nombre = listaContactos.get(seleccionado).getNombre();
-                    String numero = listaContactos.get(seleccionado).getNumero();
+                    String nombre = lstContactos.get(seleccionado).getNombre();
+                    String numero = lstContactos.get(seleccionado).getNumero();
                     mostrarDialog(nombre, numero);
                 }
             }
@@ -166,7 +166,7 @@ public class ActivityP2Lista extends AppCompatActivity {
     {
         SQLiteDatabase db = conexion.getReadableDatabase();
         Contactos contacto = null;
-        listaContactos = new ArrayList<Contactos>();
+        lstContactos = new ArrayList<Contactos>();
 
         // Cursor
         Cursor cursor = db.rawQuery("SELECT * FROM contactos", null );
@@ -182,10 +182,10 @@ public class ActivityP2Lista extends AppCompatActivity {
             contacto.setNota(cursor.getString(4));
             contacto.setImagen(cursor.getString(5));
 
-            listaContactos.add(contacto);
+            lstContactos.add(contacto);
         }
 
-        Toast.makeText(this, "Contactos en Total: " + listaContactos.size(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Contactos en Total: " + lstContactos.size(), Toast.LENGTH_SHORT).show();
 
         cursor.close();
         llenarLista();
@@ -193,13 +193,13 @@ public class ActivityP2Lista extends AppCompatActivity {
 
     public void llenarLista()
     {
-        arregloContactos = new ArrayList<String>();
-        for(int i = 0; i < listaContactos.size(); i++)
+        arrayContactos = new ArrayList<String>();
+        for(int i = 0; i < lstContactos.size(); i++)
         {
-            arregloContactos.add(listaContactos.get(i).getId() + " | "+
-                    listaContactos.get(i).getNombre() + " | "+
-                    listaContactos.get(i).getNumero() + " | " +
-                    listaContactos.get(i).getPais());
+            arrayContactos.add(lstContactos.get(i).getId() + " | "+
+                    lstContactos.get(i).getNombre() + " | "+
+                    lstContactos.get(i).getNumero() + " | " +
+                    lstContactos.get(i).getPais());
         }
     }
 
